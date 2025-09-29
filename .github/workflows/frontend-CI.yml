@@ -19,7 +19,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18   # pas aan indien nodig (check package.json)
+          node-version: 18   # check package.json voor de juiste versie
 
       - name: Install dependencies
         run: npm install
@@ -34,12 +34,16 @@ jobs:
         run: npm run build --if-present
         working-directory: ./frontend
 
-      # Stap 4: Unit tests draaien
-      - name: Run tests
-        run: npm test -- --watch=false --browsers=ChromeHeadless
+      # Stap 4: Unit tests draaien met coverage
+      - name: Run tests with coverage
+        run: npm test -- --watch=false --browsers=ChromeHeadless --code-coverage
         working-directory: ./frontend
-        continue-on-error: true
+        continue-on-error: true   # workflow faalt niet als tests falen
 
-      # Stap 5: Coverage rapport genereren (voorbeeld met Codecov)
+      # Stap 5: Upload coverage artifact
       - name: Upload coverage report
-        uses: codecov/codecov-action@v3
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-coverage
+          path: ./frontend/coverage
+
