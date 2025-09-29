@@ -1,0 +1,49 @@
+name: Backend
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Code uitchecken
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Node.js installeren (check package.json voor juiste versie)
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # 3. Dependencies installeren
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./backend  # pas dit aan naar de folder waar je backend staat
+
+      # 4. Build uitvoeren (optioneel, alleen nodig als je build scripts hebt)
+      - name: Build backend
+        run: npm run build --if-present
+        working-directory: ./backend
+
+      # 5. Unit tests draaien
+      - name: Run tests
+        run: npm test
+        working-directory: ./backend
+        continue-on-error: true  # workflow stopt niet als tests falen
+
+      # 6. Coverage rapport genereren en uploaden
+      - name: Run tests with coverage
+        run: npm test -- --coverage
+        working-directory: ./backend
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage
+          path: ./backend/coverage
