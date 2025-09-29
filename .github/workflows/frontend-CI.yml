@@ -37,6 +37,7 @@ jobs:
       # Stap 4: Unit tests draaien
       - name: Run tests
         run: npm test -- --watch=false --browsers=ChromeHeadless
+        working-directory: ./frontend
 
       # Stap 5: Coverage rapport genereren (voorbeeld met Codecov)
       - name: Upload coverage report
