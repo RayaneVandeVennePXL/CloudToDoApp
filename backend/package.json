@@ -15,7 +15,6 @@
     "express": "^4.17.3",
     "mongoose": "^6.2.5"
   },
-  ,
   "devDependencies": {
     "jest": "^29.0.0"        
   }
