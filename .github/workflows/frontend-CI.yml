@@ -1,0 +1,40 @@
+name: Frontend
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Stap 1: code ophalen
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Stap 2: Node + Angular installeren
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18   # pas aan indien nodig (check package.json)
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Angular CLI
+        run: npm install -g @angular/cli
+
+      # Stap 3: Build uitvoeren
+      - name: Build frontend
+        run: npm run build --if-present
+
+      # Stap 4: Unit tests draaien
+      - name: Run tests
+        run: npm test -- --watch=false --browsers=ChromeHeadless
+
+      # Stap 5: Coverage rapport genereren (voorbeeld met Codecov)
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v3
